@@ -1,0 +1,13 @@
+citHeader("To cite zCompositions in publications, please use:")
+
+bibentry(
+  bibtype  = "Article",
+  title    = "zCompositions -- R package for multivariate imputation of left-censored data under a compositional approach",
+  author   = c(person("J.", "Palarea-Albaladejo"), person(c("J.","A."),"Martín-Fernández")),,
+  journal  = "Chemometrics and Intelligent Laboratory Systems",
+  year     = "2015",
+  volume   = "143",
+  number   = "",
+  pages    = "85--96",
+  doi      = "10.1016/j.chemolab.2015.02.019"
+)

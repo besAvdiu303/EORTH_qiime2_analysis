@@ -1,0 +1,23 @@
+corner                  Utility Functions
+decode_golay            Functions for decoding golay barcodes
+filter_features         Filter low abundance features from a table.
+interactive_table       Display an interactive table
+is_q2metadata           checks if metadata is in qiime2 (.tsv)
+make_clr                Normalization Functions
+parse_ordination        Parse an imported q2 ordination text file
+parse_taxonomy          Parse Q2 taxonomy
+print_provenance        plot the provenance of a QIIME2 artifact (.qza)
+qza_to_phyloseq         generates a phyloseq object from .qza artifacts
+qza_to_tse              Generates a TreeSummarizedExperiment (TSE)
+                        object from .qza artifacts
+                        'TreeSummarizedExperiment'
+read_q2biom             read qiime2 biom file (version 2.1)
+read_q2metadata         read qiime2 metadata (.tsv)
+read_qza                read qiime2 artifacts (.qza)
+subsample_table         subsample_table
+summarize_taxa          summarize_taxa
+taxa_barplot            taxa_barplot
+taxa_heatmap            taxa_heatmap
+theme_q2r               A ggplot2 theme for publication-style figures
+write_q2manifest        Generates a read manifest for importing
+                        sequencing data into qiime2

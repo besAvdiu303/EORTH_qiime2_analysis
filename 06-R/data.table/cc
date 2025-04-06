@@ -1,0 +1,2 @@
+CC=x86_64-conda-linux-gnu-cc
+CFLAGS=-march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /apps/anaconda3/envs/qiime2-amplicon-2024.10/include -fdebug-prefix-map=/home/conda/feedstock_root/build_artifacts/r-base-split_1714471492496/work=/usr/local/src/conda/r-base-4.3.3 -fdebug-prefix-map=/apps/anaconda3/envs/qiime2-amplicon-2024.10=/usr/local/src/conda-prefix

@@ -1,0 +1,33 @@
+Package: qiime2R
+Type: Package
+Title: qiime2R
+Version: 0.99.6
+Author: Jordan Bisanz <jordan.bisanz@gmail.com>
+Maintainer: Jordan Bisanz <jordan.bisanz@gmail.com>
+Description: Importing QIIME2 artifacts and associated data into R sessions.
+License: MIT
+Encoding: UTF-8
+RoxygenNote: 7.3.1
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
+biocViews: Microbiome, DataImport
+Depends: R (>= 3.4.1)
+Imports: ape (>= 5.2), Biostrings (>= 2.46.0), rhdf5 (>= 2.26.2),
+        Matrix (>= 1.2-17), DT (>= 0.2), data.table (>= 1.12.8),
+        zCompositions (>= 1.0.3.1), phyloseq (>= 1.22.3), ggplot2 (>=
+        2.2.1), Hmisc (>= 4.1-1), yaml (>= 2.2.0), tidyr (>= 0.8.3),
+        dplyr (>= 0.8.1), tibble (>= 2.1.3), stats, utils, S4Vectors,
+        TreeSummarizedExperiment
+RemoteType: github
+RemoteHost: api.github.com
+RemoteRepo: qiime2R
+RemoteUsername: jbisanz
+RemoteRef: HEAD
+RemoteSha: fb7a907fcf7db00762acfaec4c041b652906beaa
+GithubRepo: qiime2R
+GithubUsername: jbisanz
+GithubRef: HEAD
+GithubSHA1: fb7a907fcf7db00762acfaec4c041b652906beaa
+NeedsCompilation: no
+Packaged: 2025-03-24 16:56:57 UTC; 207536
+Built: R 4.3.3; ; 2025-03-24 16:56:58 UTC; unix
