@@ -31,10 +31,15 @@ export MANIFEST="$DATAFLOW/01-import_and_qc/manifest.csv"
 # Rideout JR, Chase JH, Bolyen E, Ackermann G, González A, Knight R, 
 # Caporaso JG. GigaScience. 2016;5:27. http://dx.doi.org/10.1186/s13742-016-0133-6
 export METADATA="$DATA/../metadata.tsv"
+export CLASS_DIR="$DATA/../classifier/"
+mkdir -p "$CLASS_DIR"
 
 # Calculate and store the length of the primers for the V3-V4 region of the 16S rRNA gene.
-export LENGTH_F_PRIMER=$(echo -n "CCTACGGGNGGCWGCAG" | wc -c)
-export LENGTH_R_PRIMER=$(echo -n "GACTACHVGGGTATCTAATCC" | wc -c)
+F_PRIMER="CCTACGGGNGGCWGCAG"
+R_PRIMER="GACTACHVGGGTATCTAATCC"
+
+export LENGTH_F_PRIMER=$(echo -n $F_PRIMER | wc -c)
+export LENGTH_R_PRIMER=$(echo -n $R_PRIMER | wc -c)
 
 # -----------------------------------------------------------------------------
 # Directory Structure Setup
@@ -86,29 +91,37 @@ chmod +x "$SCRIPTS"/*.sh
 conda activate qiime2-amplicon-2024.10
 
 # -----------------------------------------------------------------------------
+# (0) Generate V3-V4 Classifier
+# -----------------------------------------------------------------------------
+cd "$CLASS_DIR"
+
+#bash "$SCRIPTS/generate_classifier.sh" \
+
+
+# -----------------------------------------------------------------------------
 # (1) Import Amplicon Sequences into QIIME2
 # -----------------------------------------------------------------------------
 
-# # Change to the import and merging subdirectory.
-# cd "$DATAFLOW/01-import_and_qc"
+# Change to the import and merging subdirectory.
+cd "$DATAFLOW/01-import_and_qc"
 
-# # Run the import script to bring amplicon sequences into QIIME2.
-# bash "$SCRIPTS/import.sh"
+# Run the import script to bring amplicon sequences into QIIME2.
+bash "$SCRIPTS/import.sh"
 
-# # -----------------------------------------------------------------------------
-# # (2) ASV Analysis
-# # -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# (2) ASV Analysis
+# -----------------------------------------------------------------------------
 
 # Change to the ASV denoising directory.
 cd "$DATAFLOW/02-ASV_denosing"
 
 # Run the denoising script.
-#bash "$SCRIPTS/ASU_analysis.sh"
+bash "$SCRIPTS/ASU_analysis.sh"
 
 # Set variables for ASV quantification analysis.
-ASV_RESULT_DIR_NAME="03-ASV_results" # Define the directory name for ASV results.
-ASV_REP_SEQS="$DATAFLOW/02-ASV_denosing/filtered-rep-seqs.qza" # Define the representative sequences file.
-ASV_TABLE="$DATAFLOW/02-ASV_denosing/filtered-table.qza" # Define the feature table file.
+ASV_RESULT_DIR_NAME="03-ASV_results" 
+ASV_REP_SEQS="$DATAFLOW/02-ASV_denosing/filtered-rep-seqs.qza" 
+ASV_TABLE="$DATAFLOW/02-ASV_denosing/filtered-table.qza" 
 
 # Define parameters for ASV quantification.
 ASV_SAMPLING_DEPTH=24587 
@@ -124,29 +137,36 @@ ASV_TAG="ASV"
 
 # Execute the quantification script with the defined parameters.
 echo "Start ASV quantification"
-# bash "$SCRIPTS/run_quantification.sh" \
-#   "$ASV_RESULT_DIR_NAME" \
-#   "$ASV_REP_SEQS" \
-#   "$ASV_TABLE" \
-#   "$ASV_SAMPLING_DEPTH" \
-#   "$ASV_METADATA_COLUMN" \
-#   "$ASV_METADATA_COLUMN2" \
-#   "$ASV_ALPHA_RARE_MAX_DEPTH" \
-#   "$ASV_SAMPLE_TYPE" \
-#   "$ASV_METADATA_COLUMN3" \
-#   "$ASV_REF_LEVEL" \
-#   "$ASV_ANALYSIS_LEVEL" \
-#   "$ASV_TAXA_COLLAPSE_LEVEL" \
-#   "$ASV_TAG"
+bash "$SCRIPTS/run_quantification.sh" \
+  "$ASV_RESULT_DIR_NAME" \
+  "$ASV_REP_SEQS" \
+  "$ASV_TABLE" \
+  "$ASV_SAMPLING_DEPTH" \
+  "$ASV_METADATA_COLUMN" \
+  "$ASV_METADATA_COLUMN2" \
+  "$ASV_ALPHA_RARE_MAX_DEPTH" \
+  "$ASV_SAMPLE_TYPE" \
+  "$ASV_METADATA_COLUMN3" \
+  "$ASV_REF_LEVEL" \
+  "$ASV_ANALYSIS_LEVEL" \
+  "$ASV_TAXA_COLLAPSE_LEVEL" \
+  "$ASV_TAG"
 
 echo "ASV quantification completed"
 
 # Change directory to ASV results for downstream R analysis.
 cd "$DATAFLOW/03-ASV_results"   
+ASV_TABLE="$DATAFLOW/02-ASV_denosing/filtered-table.qza" # Define the feature table file.
 
 # Run the R script to perform further analysis, passing required file paths as arguments.
 echo "Start ASV visualization with R"
-#Rscript "$SCRIPTS/run_visualization.R" "$RUNPATH/06-R" "$METADATA" "$ASV_TABLE" "$ASV_TAG"
+Rscript "$SCRIPTS/run_visualization.R" "$RUNPATH/06-R" "$METADATA" "$ASV_TABLE" "$ASV_TAG"
+
+# Remove unnecessary Rplots.pdf
+if [ -f "Rplots.pdf" ]; then
+    rm "Rplots.pdf"
+fi
+
 echo "ASV visualization with R completed"
 
 # -----------------------------------------------------------------------------
@@ -157,7 +177,7 @@ echo "ASV visualization with R completed"
 cd "$DATAFLOW/04-OTUs_clustering"
 
 # Run the OTUs analysis script.
-#bash "$SCRIPTS/OTUs_analysis.sh"
+bash "$SCRIPTS/OTUs_analysis.sh"
 
 # Set variables for OTUs quantification analysis.
 OTUs_RESULT_DIR_NAME="05-OTUs_results"
@@ -199,9 +219,15 @@ echo "OTUs quantification completed"
 cd "$DATAFLOW/05-OTUs_results"   
 
 # Run the R script to perform further analysis, passing required file paths as arguments.
-echo "Start ASV visualization with R"
+echo "Start OTUs visualization with R"
 Rscript "$SCRIPTS/run_visualization.R" "$RUNPATH/06-R" "$METADATA" "$OTUs_TABLE" "$OTUs_TAG"
-echo "ASV visualization with R completed"
+
+# Remove unnecessary Rplots.pdf
+if [ -f "Rplots.pdf" ]; then
+    rm "Rplots.pdf"
+fi
+
+echo "OTUs visualization with R completed"
 
 
 # -----------------------------------------------------------------------------

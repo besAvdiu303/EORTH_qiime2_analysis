@@ -50,6 +50,8 @@ META <- args[2]  # Metadata file
 TABLE <- args[3]  # Feature table (SVs)
 TAG <- args[4]
 TAG <- trimws(TAG)
+rooted_TREE <- file.path("01-phylogeny", paste(TAG, "rooted-tree.qza", sep = "_"))
+unrooted_TREE <- file.path("01-phylogeny", paste(TAG, "unrooted-tree.qza", sep = "_"))
 
 # Define output directory
 plot_dir <- file.path(getwd(), "05-visualization")
@@ -83,7 +85,6 @@ metadata %>%
   filter(!is.na(shannon_entropy)) %>%
   ggplot(aes(x = `age`, y = shannon_entropy, color = `sample_type`)) +
   stat_summary(geom = "errorbar", fun.data = mean_se, width = 0) +
-  stat_summary(geom = "line", fun.data = mean_se) +
   stat_summary(geom = "point", fun.data = mean_se) +
   xlab("Age") +
   ylab("Shannon Diversity") +
@@ -161,3 +162,37 @@ ggsave(file.path(plot_dir, paste(TAG, "barplot.pdf", sep = "_")),
 #   scale_fill_gradient2(low = "darkblue", high = "darkred", midpoint = 0, mid = "white", name = "log2(fold-change") +
 #   theme(legend.position = "right")
 # ggsave("05-visualization/tree.pdf", height = 10, width = 10, device = "pdf", useDingbats = FALSE)
+
+
+
+
+# Import the QIIME 2 tree artifact (adjust the path as needed)
+tree_artifact <- read_qza(rooted_TREE)
+phylo_tree <- tree_artifact$data  # Extract the phylo object
+
+# Plot the tree using ggtree, which utilizes ggplot2 syntax
+p <- ggtree(phylo_tree) +
+  geom_tiplab(size = 3, color = "darkblue") +
+  ggtitle("Phylogenetic Tree from QIIME 2 Artifact") +
+  theme_minimal()
+
+# Save the plot using ggsave with a custom file name
+ggsave(file.path(plot_dir, paste(TAG, "rooted-tree.pdf", sep = "_")),
+       plot = p,
+       height = 4, width = 8, device = "pdf")
+
+
+tree_artifact <- read_qza(unrooted_TREE)
+phylo_tree <- tree_artifact$data  # Extract the phylo object
+
+# Plot the tree using ggtree, which utilizes ggplot2 syntax
+p <- ggtree(phylo_tree) +
+  geom_tiplab(size = 3, color = "darkblue") +
+  ggtitle("Phylogenetic Tree from QIIME 2 Artifact") +
+  theme_minimal()
+
+# Save the plot using ggsave with a custom file name
+ggsave(file.path(plot_dir, paste(TAG, "unrooted-tree.pdf", sep = "_")),
+       plot = p,
+       height = 4, width = 8, device = "pdf")
+

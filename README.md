@@ -40,10 +40,16 @@ and **ASV (Amplicon Sequence Variant)** inference. It includes all steps from pr
 
 ## Running the script
 
-To run the script, first navigate to the directory where run.sh is located.
+To run the script, first navigate to the directory where run.sh is located with the command:
+
+bash -i run.sh
+
 Ensure that QIIME 2 is installed in a Conda environment named qiime2-amplicon-2024.10, including all necessary plugins such as DADA2 and ALDEx2.
-If you havent installed it, a yml-file can be found in 05-conda_env to export the qiime2 Conda environment. Also the needed R packages are
-stored under 06-R, if you havent install them in your regular directory. 
+If you havent installed it, a yml-file can be found in "05-conda_env" to export the qiime2 Conda environment. Also the needed R packages are
+stored under "06-R", if you havent install them in your regular directory. 
+
+The classifier vor the taxonomic analysis of the V3-V4 region was retrieved from:
+https://github.com/Jiung-Wen/q2-silva-V3V4classifier.git
 
 You can either place your FASTQ files in the local directory 01-data/20241009-raw_data, or—if you're working on the FH server and have access to 
 /proj/courses/2024_fallstudie/20241209-raw_data/—you can simply run the script, and it will automatically mirror the files to the appropriate local directory.
