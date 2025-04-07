@@ -95,7 +95,9 @@ conda activate qiime2-amplicon-2024.10
 # -----------------------------------------------------------------------------
 cd "$CLASS_DIR"
 
-#bash "$SCRIPTS/generate_classifier.sh" \
+bash "$SCRIPTS/generate_classifier.sh" \
+  "$F_PRIMER" \
+  "$R_PRIMER"
 
 
 # -----------------------------------------------------------------------------
@@ -160,7 +162,11 @@ ASV_TABLE="$DATAFLOW/02-ASV_denosing/filtered-table.qza" # Define the feature ta
 
 # Run the R script to perform further analysis, passing required file paths as arguments.
 echo "Start ASV visualization with R"
-Rscript "$SCRIPTS/run_visualization.R" "$RUNPATH/06-R" "$METADATA" "$ASV_TABLE" "$ASV_TAG"
+Rscript "$SCRIPTS/run_visualization.R" \
+  "$RUNPATH/06-R" \
+  "$METADATA" \
+  "$ASV_TABLE" \
+  "$ASV_TAG"
 
 # Remove unnecessary Rplots.pdf
 if [ -f "Rplots.pdf" ]; then
@@ -220,7 +226,11 @@ cd "$DATAFLOW/05-OTUs_results"
 
 # Run the R script to perform further analysis, passing required file paths as arguments.
 echo "Start OTUs visualization with R"
-Rscript "$SCRIPTS/run_visualization.R" "$RUNPATH/06-R" "$METADATA" "$OTUs_TABLE" "$OTUs_TAG"
+Rscript "$SCRIPTS/run_visualization.R" \
+  "$RUNPATH/06-R" \
+  "$METADATA" \
+  "$OTUs_TABLE" \
+  "$OTUs_TAG"
 
 # Remove unnecessary Rplots.pdf
 if [ -f "Rplots.pdf" ]; then
