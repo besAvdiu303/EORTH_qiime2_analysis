@@ -8,8 +8,8 @@
 # Exit immediately if any command returns a non-zero exit status.
 set -e
 
-FORWARD_PRIMER="CCTACGGGNGGCWGCAG"
-REVESRE_PRIMER="GACTACHVGGGTATCTAATCC"
+F_PRIMER="CCTACGGGNGGCWGCAG"
+R_PRIMER="GACTACHVGGGTATCTAATCC"
 
 # -----------------------------------------------------------------------------
 # OTUs: Trim Paired-End Sequences using Cutadapt
@@ -21,8 +21,8 @@ echo "Step 1 of 9: OTUs - Trimming paired-end sequences with cutadapt..."
 qiime cutadapt trim-paired \
   --i-demultiplexed-sequences $DATAFLOW/01-import_and_qc/paired-end-demux.qza \
   --p-cores 60 \
-  --p-front-f $FORWARD_PRIMER \
-  --p-front-r $REVESRE_PRIMER \
+  --p-front-f $F_PRIMER \
+  --p-front-r $R_PRIMER \
   --p-discard-untrimmed \
   --o-trimmed-sequences demux-trimmed.qza \
   --verbose

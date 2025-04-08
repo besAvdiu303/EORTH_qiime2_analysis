@@ -3,21 +3,19 @@
 ## Overview
 
 This pipeline performs amplicon sequence analysis using **QIIME 2**, supporting both **OTUs (Operational Taxonomic Unit)** clustering 
-and **ASV (Amplicon Sequence Variant)** inference. It includes all steps from primer trimming to taxonomic assignment and integrates downstream visualization using **R** (e.g., ggplot2`).
-
+and **ASV (Amplicon Sequence Variant)** inference. It includes all steps from primer trimming to taxonomic assignment and integrates downstream visualization using 
+- **R** (e.g.,qiime2R, ggplot2`).
+- **Python**
+- and the online visualization of qiime "https://view.qiime2.org/"
 ---
 
 ## Features
 
-- ASV inference using DADA2
+- ASV inference using `dada2`
+- Trains own classifier for the V3-V4 region of the 16S rRNA gene
 - Sample and feature filtering based on metadata
-- Primer removal using `cutadapt`
-- Paired-end merging using `vsearch`
-- Quality filtering via `q-score`
-- Dereplication and contaminant removal
-- OTUs clustering at 97% identity
-- Sample and feature filtering based on metadata
-- Visualization and statistical analysis in R
+- OTUs clustering at 97% identity using `vsearch` de-novo method
+- Visualization and statistical analysis in R using `qiime2R`
 
 ---
 
@@ -28,6 +26,7 @@ and **ASV (Amplicon Sequence Variant)** inference. It includes all steps from pr
 - [QIIME 2 (2024.x or later)](https://qiime2.org/)
 - [R (>= 4.0)](https://cran.r-project.org/)
 - R packages: `qiime2R`, `ggplot2`, `dplyr`, `devtools`, `ggrepel`, etc.
+- Python: `os`, `numpy`, `pandas`, etc. 
 - Bash
 
 
@@ -40,7 +39,7 @@ and **ASV (Amplicon Sequence Variant)** inference. It includes all steps from pr
 
 ## Running the script
 
-To run the script, first navigate to the directory where run.sh is located with the command:
+To run the script, first navigate to the directory where run.sh is located and run the command:
 
 bash -i run.sh
 
@@ -48,13 +47,12 @@ Ensure that QIIME 2 is installed in a Conda environment named qiime2-amplicon-20
 If you havent installed it, a yml-file can be found in "05-conda_env" to export the qiime2 Conda environment. Also the needed R packages are
 stored under "06-R", if you havent install them in your regular directory. 
 
-The classifier vor the taxonomic analysis of the V3-V4 region was retrieved from:
-https://github.com/Jiung-Wen/q2-silva-V3V4classifier.git
+The classifier for the taxonomic analysis of the V3-V4 region will be generted at first by the script which will take a couple hours, so be patient. 
 
-You can either place your FASTQ files in the local directory 01-data/20241009-raw_data, or—if you're working on the FH server and have access to 
+You can either place your FASTQ files in the local directory 01-data/20241009-raw_data, or—if you're working on the FHWN server and have access to 
 /proj/courses/2024_fallstudie/20241209-raw_data/—you can simply run the script, and it will automatically mirror the files to the appropriate local directory.
 
-The pipeline can be clone from GitHub with the command:
+The pipeline is available on GitHub and can be cloned with the command:
 
-git clone https://github.com/besAvdiu303/EORTH_qiime2_analysis.git
+`git clone https://github.com/besAvdiu303/EORTH_qiime2_analysis.git`
 

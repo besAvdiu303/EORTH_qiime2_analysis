@@ -85,7 +85,7 @@ echo "Number of files in the raw data directory: $(ls -1 "$DATA" | wc -l)"
 # -----------------------------------------------------------------------------
 
 # Ensure that all shell scripts in the SCRIPTS directory are executable.
-chmod +x "$SCRIPTS"/*.sh
+chmod +x "$SCRIPTS"/*
 
 # Activate the QIIME2 environment required for downstream analyses.
 conda activate qiime2-amplicon-2024.10
@@ -95,9 +95,7 @@ conda activate qiime2-amplicon-2024.10
 # -----------------------------------------------------------------------------
 cd "$CLASS_DIR"
 
-bash "$SCRIPTS/generate_classifier.sh" \
-  "$F_PRIMER" \
-  "$R_PRIMER"
+bash "$SCRIPTS/generate_classifier.sh" "$F_PRIMER" "$R_PRIMER"
 
 
 # -----------------------------------------------------------------------------
@@ -131,9 +129,9 @@ ASV_METADATA_COLUMN="sample_type"
 ASV_METADATA_COLUMN2="horse"
 ASV_ALPHA_RARE_MAX_DEPTH=32500
 ASV_SAMPLE_TYPE="gum"
-ASV_METADATA_COLUMN3="disease_state"
-ASV_REF_LEVEL="healthy"
-ASV_ANALYSIS_LEVEL="onset"
+ASV_METADATA_COLUMN3="sample_type" #this was originally set to 'disease_state' but since Q2 (interpretation) wants a comparison between gum and plaque, I set it to 'sample_type'
+ASV_REF_LEVEL="gum"
+ASV_ANALYSIS_LEVEL="plaque"
 ASV_TAXA_COLLAPSE_LEVEL=6
 ASV_TAG="ASV"
 
@@ -162,11 +160,7 @@ ASV_TABLE="$DATAFLOW/02-ASV_denosing/filtered-table.qza" # Define the feature ta
 
 # Run the R script to perform further analysis, passing required file paths as arguments.
 echo "Start ASV visualization with R"
-Rscript "$SCRIPTS/run_visualization.R" \
-  "$RUNPATH/06-R" \
-  "$METADATA" \
-  "$ASV_TABLE" \
-  "$ASV_TAG"
+Rscript "$SCRIPTS/run_visualization.R" "$RUNPATH/06-R" "$METADATA" "$ASV_TABLE" "$ASV_TAG"
 
 # Remove unnecessary Rplots.pdf
 if [ -f "Rplots.pdf" ]; then
@@ -174,6 +168,14 @@ if [ -f "Rplots.pdf" ]; then
 fi
 
 echo "ASV visualization with R completed"
+
+# Generate the genus heatmap from the differential abundance analysis
+echo "Generate genus heatmap"
+cd "$DATAFLOW/03-ASV_results/05-visualization" 
+python3 "$SCRIPTS/generate_genus_heatmap.py" \
+        "$DATAFLOW/03-ASV_results/05-visualization/${ASV_TAG}_genus.tsv" \
+        "$DATAFLOW/03-ASV_results/05-visualization/${ASV_TAG}_genus_heatmap.pdf"
+echo "Heatmap successfully generated."
 
 # -----------------------------------------------------------------------------
 # (3) OTUs Analysis
@@ -196,9 +198,9 @@ OTUs_METADATA_COLUMN="sample_type"
 OTUs_METADATA_COLUMN2="horse"
 OTUs_ALPHA_RARE_MAX_DEPTH=30000
 OTUs_SAMPLE_TYPE="gum"
-OTUs_METADATA_COLUMN3="disease_state"
-OTUs_REF_LEVEL="healthy"
-OTUs_ANALYSIS_LEVEL="onset"
+OTUs_METADATA_COLUMN3="sample_type" #this was originally set to 'disease_state' but since Q2 (interpretation) wants a comparison between gum and plaque, I set it to 'sample_type'
+OTUs_REF_LEVEL="gum"
+OTUs_ANALYSIS_LEVEL="plaque"
 OTUs_TAXA_COLLAPSE_LEVEL=6
 OTUs_TAG="OTUs"
 
@@ -226,11 +228,7 @@ cd "$DATAFLOW/05-OTUs_results"
 
 # Run the R script to perform further analysis, passing required file paths as arguments.
 echo "Start OTUs visualization with R"
-Rscript "$SCRIPTS/run_visualization.R" \
-  "$RUNPATH/06-R" \
-  "$METADATA" \
-  "$OTUs_TABLE" \
-  "$OTUs_TAG"
+Rscript "$SCRIPTS/run_visualization.R" "$RUNPATH/06-R" "$METADATA" "$OTUs_TABLE" "$OTUs_TAG"
 
 # Remove unnecessary Rplots.pdf
 if [ -f "Rplots.pdf" ]; then
@@ -240,8 +238,19 @@ fi
 echo "OTUs visualization with R completed"
 
 
+# Generate the genus heatmap from the differential abundance analysis
+echo "Generating genus heatmap..."
+cd "$DATAFLOW/05-OTUs_results/05-visualization" 
+
+python3 "$SCRIPTS/generate_genus_heatmap.py" \
+        "$DATAFLOW/05-OTUs_results/05-visualization/${OTUs_TAG}_genus.tsv" \
+        "$DATAFLOW/05-OTUs_results/05-visualization/${OTUs_TAG}_genus_heatmap.pdf"
+echo "Heatmap successfully generated."
+
 # -----------------------------------------------------------------------------
 # Finalization: Deactivate environment and finish processing.
 # -----------------------------------------------------------------------------
 
 conda deactivate
+
+echo "Analysis completed."

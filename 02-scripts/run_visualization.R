@@ -120,12 +120,12 @@ taxasums <- summarize_taxa(SVs, taxonomy)$Genus
 
 # Generate heatmap
 taxa_heatmap(taxasums, metadata, "sample_type")
-ggsave(file.path(plot_dir, paste(TAG, "heatmap.pdf", sep = "_")),
+ggsave(file.path(plot_dir, paste(TAG, "taxa_heatmap.pdf", sep = "_")),
        height = 4, width = 8, device = "pdf")
 
 # Generate barplot
 taxa_barplot(taxasums, metadata, "sample_type")
-ggsave(file.path(plot_dir, paste(TAG, "barplot.pdf", sep = "_")),
+ggsave(file.path(plot_dir, paste(TAG, "taxa_barplot.pdf", sep = "_")),
        height = 4, width = 8, device = "pdf")
 
 
